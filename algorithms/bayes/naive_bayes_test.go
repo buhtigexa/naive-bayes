@@ -40,11 +40,11 @@ func TestNaiveBayes_Predict(t *testing.T) {
 	corpus := createCorpus()
 	_ = nb.Train(corpus)
 	prediction := nb.Predict(test)
-	assert.Equal(t, "spam", prediction[0].class)
+	assert.Equal(t, "spam", prediction[0].Class)
 
 	test = Document{[]string{"dear", "friend"}, ""}
 
 	prediction = nb.Predict(test)
-	assert.Equal(t, "normal", prediction[0].class)
+	assert.Equal(t, "normal", prediction[0].Class)
 
 }

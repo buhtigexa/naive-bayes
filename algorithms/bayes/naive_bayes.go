@@ -67,7 +67,7 @@ func (nb *NaiveBayes) Predict(doc Document) Predictions {
 		for _, word := range doc.Terms {
 			probs *= class.getProb(word)
 		}
-		predictions = append(predictions, prediction{class.Id, class.PriorProb * probs})
+		predictions = append(predictions, Prediction{class.Id, class.PriorProb * probs})
 	}
 	sort.Sort(sort.Reverse(predictions))
 	return predictions
