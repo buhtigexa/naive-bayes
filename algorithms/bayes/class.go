@@ -5,6 +5,10 @@ type Document struct {
 	class string
 }
 
+func NewDocument(terms []string, class string) Document {
+	return Document{terms, class}
+}
+
 type metric struct {
 	frequency   int
 	probability float64
