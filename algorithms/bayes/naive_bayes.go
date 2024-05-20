@@ -6,29 +6,29 @@ import (
 )
 
 type NaiveBayes struct {
-	classes   map[string]*class
+	classes   map[string]*Class
 	words     map[string]bool
 	totalDocs int32
 }
 
 func NewNaiveBayes() *NaiveBayes {
 	return &NaiveBayes{
-		classes: make(map[string]*class),
+		classes: make(map[string]*Class),
 		words:   make(map[string]bool),
 	}
 }
 
 type TrainResult struct {
 	Docs    int
-	Classes map[string]class
+	Classes map[string]Class
 }
 
 func (nb *NaiveBayes) add(doc Document) {
-	if _, ok := nb.classes[doc.class]; !ok {
-		nb.classes[doc.class] = newClass(doc.class)
+	if _, ok := nb.classes[doc.Class]; !ok {
+		nb.classes[doc.Class] = newClass(doc.Class)
 	}
-	nb.classes[doc.class].Add(doc)
-	for w, _ := range nb.classes[doc.class].terms {
+	nb.classes[doc.Class].Add(doc)
+	for w, _ := range nb.classes[doc.Class].terms {
 		nb.words[w] = true
 	}
 	nb.totalDocs++
@@ -44,13 +44,13 @@ func (nb *NaiveBayes) Train(documents []Document) *TrainResult {
 
 	nb.balance()
 
-	trainResult.Classes = make(map[string]class, len(nb.classes))
+	trainResult.Classes = make(map[string]Class, len(nb.classes))
 
 	for w, c := range nb.classes {
 		c.probs()
 		trainResult.Docs += c.totalDocs
 		c.priorProb = float64(c.totalDocs) / float64(nb.totalDocs)
-		trainResult.Classes[w] = class{
+		trainResult.Classes[w] = Class{
 			terms:     c.terms,
 			id:        c.id,
 			totalDocs: c.totalDocs,
@@ -64,7 +64,7 @@ func (nb *NaiveBayes) Predict(doc Document) Predictions {
 	var predictions Predictions
 	for _, class := range nb.classes {
 		probs := 1.0
-		for _, word := range doc.terms {
+		for _, word := range doc.Terms {
 			probs *= class.getProb(word)
 		}
 		predictions = append(predictions, prediction{class.id, class.priorProb * probs})
