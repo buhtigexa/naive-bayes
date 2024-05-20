@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func getCorpus() []Document {
+func createCorpus() []Document {
 	doc1 := Document{[]string{"dear", "friend", "launch", "money"}, "normal"}
 	doc2 := Document{[]string{"dear", "friend", "launch"}, "normal"}
 	doc3 := Document{[]string{"dear", "friend", "launch"}, "normal"}
@@ -21,16 +21,30 @@ func getCorpus() []Document {
 	doc12 := Document{[]string{"money"}, "spam"}
 
 	corpus := []Document{doc1, doc2, doc3, doc4, doc5, doc6, doc7, doc8, doc9, doc10, doc11, doc12}
-
 	return corpus
 }
 
 func TestNaiveBayes_Train(t *testing.T) {
 	nb := NewNaiveBayes()
-	docs := getCorpus()
-	result := nb.Train(docs)
+	corpus := createCorpus()
+	result := nb.Train(corpus)
 	assert.NotNil(t, result)
-	assert.Equal(t, result.Docs, len(docs))
+	assert.Equal(t, result.Docs, len(corpus))
 	assert.InEpsilon(t, result.classes["normal"].terms["launch"].probability, 0.190, 0.01)
 	assert.InEpsilon(t, result.classes["spam"].terms["launch"].probability, 0.090, 0.09)
+}
+
+func TestNaiveBayes_Predict(t *testing.T) {
+	test := Document{[]string{"launch", "money", "money", "money"}, ""}
+	nb := NewNaiveBayes()
+	corpus := createCorpus()
+	_ = nb.Train(corpus)
+	prediction := nb.Predict(test)
+	assert.Equal(t, "spam", prediction[0].class)
+
+	test = Document{[]string{"dear", "friend"}, ""}
+
+	prediction = nb.Predict(test)
+	assert.Equal(t, "normal", prediction[0].class)
+
 }

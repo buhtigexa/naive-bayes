@@ -16,5 +16,4 @@ func TestClass_Add(t *testing.T) {
 	}
 	assert.Equal(t, class.totalDocs, int32(1))
 	assert.Equal(t, class.totalWords, int32(len(doc.terms)))
-
 }

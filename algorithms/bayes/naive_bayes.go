@@ -1,6 +1,9 @@
 package bayes
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 type NaiveBayes struct {
 	classes map[string]*class
@@ -34,7 +37,7 @@ func (nb *NaiveBayes) Train(documents []Document) *TrainResult {
 		totalDocs++
 	}
 
-	nb.balanceModel()
+	nb.balance()
 
 	trainResult.classes = make(map[string]class, len(nb.classes))
 
@@ -52,7 +55,20 @@ func (nb *NaiveBayes) Train(documents []Document) *TrainResult {
 	return trainResult
 }
 
-func (nb *NaiveBayes) balanceModel() {
+func (nb *NaiveBayes) Predict(doc Document) Predictions {
+	var predictions Predictions
+	for _, class := range nb.classes {
+		probs := 1.0
+		for _, word := range doc.terms {
+			probs *= class.getProb(word)
+		}
+		predictions = append(predictions, prediction{class.id, class.priorProb * probs})
+	}
+	sort.Sort(sort.Reverse(predictions))
+	return predictions
+}
+
+func (nb *NaiveBayes) balance() {
 	for w, _ := range nb.words {
 		for _, class := range nb.classes {
 			if !class.hasWord(w) {

@@ -45,6 +45,14 @@ func (c *class) probs() {
 	}
 }
 
+func (c *class) getProb(w string) float64 {
+	if metric, ok := c.terms[w]; ok {
+		return metric.probability
+	}
+	return 0.0001
+
+}
+
 func (c *class) addWord(w string) {
 	if _, ok := c.terms[w]; !ok {
 		c.terms[w] = &metric{}
