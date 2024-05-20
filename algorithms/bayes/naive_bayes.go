@@ -20,7 +20,7 @@ func NewNaiveBayes() *NaiveBayes {
 
 type TrainResult struct {
 	Docs    int
-	classes map[string]class
+	Classes map[string]class
 }
 
 func (nb *NaiveBayes) add(doc Document) {
@@ -44,13 +44,13 @@ func (nb *NaiveBayes) Train(documents []Document) *TrainResult {
 
 	nb.balance()
 
-	trainResult.classes = make(map[string]class, len(nb.classes))
+	trainResult.Classes = make(map[string]class, len(nb.classes))
 
 	for w, c := range nb.classes {
 		c.probs()
 		trainResult.Docs += c.totalDocs
 		c.priorProb = float64(c.totalDocs) / float64(nb.totalDocs)
-		trainResult.classes[w] = class{
+		trainResult.Classes[w] = class{
 			terms:     c.terms,
 			id:        c.id,
 			totalDocs: c.totalDocs,

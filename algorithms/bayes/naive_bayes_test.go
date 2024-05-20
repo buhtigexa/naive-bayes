@@ -30,8 +30,8 @@ func TestNaiveBayes_Train(t *testing.T) {
 	result := nb.Train(corpus)
 	assert.NotNil(t, result)
 	assert.Equal(t, result.Docs, len(corpus))
-	assert.InEpsilon(t, result.classes["normal"].terms["launch"].probability, 0.190, 0.01)
-	assert.InEpsilon(t, result.classes["spam"].terms["launch"].probability, 0.090, 0.09)
+	assert.InEpsilon(t, result.Classes["normal"].terms["launch"].probability, 0.190, 0.01)
+	assert.InEpsilon(t, result.Classes["spam"].terms["launch"].probability, 0.090, 0.09)
 }
 
 func TestNaiveBayes_Predict(t *testing.T) {
